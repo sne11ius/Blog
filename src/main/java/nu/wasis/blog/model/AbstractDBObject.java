@@ -14,4 +14,12 @@ public class AbstractDBObject {
     public String toString() {
         return new Gson().toJson(this);
     }
+
+    public ObjectId getId() {
+        return id;
+    }
+
+    public void setId(ObjectId id) {
+        this.id = id;
+    }
 }

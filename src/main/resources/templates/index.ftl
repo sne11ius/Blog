@@ -6,14 +6,12 @@
     <body>
         <#include "gplusheader.ftl"> 
         <h1>wasis.nu/mit/blog?</h1>
+        <hr>
         <#if isowner>
             <#include "submitpostform.ftl">
         </#if>
         <#list posts as post>
-            <div>
-                <h2>${post.title?html}</h2>
-                <p>${post.body?html}</p
-            </div>
+            <#include "singlepost.ftl">
         </#list>
         <script type="text/javascript">
             <#include "gplushelper.js"> 

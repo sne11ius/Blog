@@ -1,10 +1,12 @@
 package nu.wasis.service;
 
+import java.util.Collections;
 import java.util.List;
 
 import nu.wasis.blog.model.Post;
 import nu.wasis.util.Constants;
 import nu.wasis.util.MongoUtils;
+import nu.wasis.util.PostDateComparator;
 
 import org.apache.commons.lang.NotImplementedException;
 
@@ -16,7 +18,9 @@ public class PostService {
     final Datastore ds = new Morphia().createDatastore(MongoUtils.getMongo(), Constants.DB_NAME);
 
     public List<Post> getPosts() {
-        return ds.find(Post.class).asList();
+        final List<Post> allPosts = ds.find(Post.class).asList();
+        Collections.sort(allPosts, new PostDateComparator());
+        return allPosts;
     }
 
     public Post getPost(final String postId) {

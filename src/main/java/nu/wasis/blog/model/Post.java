@@ -1,5 +1,7 @@
 package nu.wasis.blog.model;
 
+import java.util.Date;
+
 import com.github.jmkgreen.morphia.annotations.Entity;
 
 @Entity("Posts")
@@ -8,6 +10,7 @@ public class Post extends AbstractDBObject {
     private String title;
     private String body;
     private User author;
+    private Date date = new Date();
 
     public Post() {
     }
@@ -40,6 +43,14 @@ public class Post extends AbstractDBObject {
 
     public void setAuthor(final User author) {
         this.author = author;
+    }
+
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(final Date date) {
+        this.date = date;
     }
 
 }
