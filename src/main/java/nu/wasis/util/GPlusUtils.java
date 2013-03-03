@@ -2,6 +2,8 @@ package nu.wasis.util;
 
 import java.io.IOException;
 
+import nu.wasis.blog.model.User;
+
 import org.apache.log4j.Logger;
 
 import spark.Request;
@@ -38,6 +40,34 @@ public class GPlusUtils {
         return null != request.session().attribute("token");
     }
 
+    public static boolean isOwnerLoggedIn(final Request request) {
+        return getCurrentUserId(request).equals(PrivateConstants.OWNER_ID);
+    }
+
+    public static String getCurrentUserId(final Request request) {
+        final String tokenData = request.session().attribute("token");
+        if (tokenData == null) {
+            LOG.error("Not logged in.");
+            return "";
+        }
+        try {
+            final GoogleCredential credential = new GoogleCredential.Builder().setJsonFactory(JSON_FACTORY)
+                                                                              .setTransport(TRANSPORT)
+                                                                              .setClientSecrets(PrivateConstants.CLIENT_ID,
+                                                                                                PrivateConstants.CLIENT_SECRET)
+                                                                              .build()
+                                                                              .setFromTokenResponse(JSON_FACTORY.fromString(tokenData,
+                                                                                                                            GoogleTokenResponse.class));
+            final Plus service = new Plus.Builder(TRANSPORT, JSON_FACTORY, credential).setApplicationName(PrivateConstants.APPLICATION_NAME)
+                                                                                      .build();
+            final Person me = service.people().get("me").execute();
+            return me.getId();
+        } catch (final IOException e) {
+            LOG.error(e);
+            return "";
+        }
+    }
+
     public static String getCurrentUsername(final Request request) {
         final String tokenData = request.session().attribute("token");
         if (tokenData == null) {
@@ -59,6 +89,33 @@ public class GPlusUtils {
         } catch (final IOException e) {
             LOG.error(e);
             return "[unknown]";
+        }
+    }
+
+    public static User getCurrentUser(final Request request) {
+        final String tokenData = request.session().attribute("token");
+        if (tokenData == null) {
+            LOG.error("Not logged in.");
+            return null;
+        }
+        try {
+            final GoogleCredential credential = new GoogleCredential.Builder().setJsonFactory(JSON_FACTORY)
+                                                                              .setTransport(TRANSPORT)
+                                                                              .setClientSecrets(PrivateConstants.CLIENT_ID,
+                                                                                                PrivateConstants.CLIENT_SECRET)
+                                                                              .build()
+                                                                              .setFromTokenResponse(JSON_FACTORY.fromString(tokenData,
+                                                                                                                            GoogleTokenResponse.class));
+            final Plus service = new Plus.Builder(TRANSPORT, JSON_FACTORY, credential).setApplicationName(PrivateConstants.APPLICATION_NAME)
+                                                                                      .build();
+            final Person me = service.people().get("me").execute();
+            final String firstname = me.getDisplayName().split(" ")[0];
+            final String lastname = me.getDisplayName().split(" ")[1];
+            final String email = "";// me.getEmails().get(0).toString();
+            return new User(email, firstname, lastname);
+        } catch (final IOException e) {
+            LOG.error(e);
+            return null;
         }
     }
 }

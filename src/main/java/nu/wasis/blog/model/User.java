@@ -9,6 +9,15 @@ public class User {
     private String firstname;
     private String lastname;
 
+    public User() {
+    }
+
+    public User(final String email, final String firstname, final String lastname) {
+        this.email = email;
+        this.firstname = firstname;
+        this.lastname = lastname;
+    }
+
     public String getEmail() {
         return email;
     }

@@ -36,7 +36,6 @@ final class IndexRoute extends Route {
         cfg.setObjectWrapper(ObjectWrapper.BEANS_WRAPPER);
         final String state = new BigInteger(130, new SecureRandom()).toString(32);
         request.session().attribute("state", state);
-        final String nickname = GPlusUtils.getCurrentUsername(request);
         final StringWriter writer = new StringWriter();
         try {
             final Template template = cfg.getTemplate("index.ftl");
@@ -44,8 +43,9 @@ final class IndexRoute extends Route {
             map.put("posts", Blog.postService.getPosts());
             map.put("client_id", PrivateConstants.CLIENT_ID);
             map.put("state", state);
-            map.put("nickname", nickname);
+            map.put("nickname", GPlusUtils.getCurrentUsername(request));
             map.put("loggedin", GPlusUtils.isLoggedIn(request));
+            map.put("isowner", GPlusUtils.isOwnerLoggedIn(request));
             template.process(map, writer);
         } catch (final IOException e) {
             Blog.LOG.error(e);

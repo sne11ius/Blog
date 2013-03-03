@@ -11,7 +11,6 @@ import spark.Route;
 import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
 import com.google.api.client.googleapis.auth.oauth2.GoogleTokenResponse;
 import com.google.api.client.http.GenericUrl;
-import com.google.api.client.http.HttpResponse;
 
 final class DisconnectRoute extends Route {
     DisconnectRoute(final String path) {
@@ -37,11 +36,10 @@ final class DisconnectRoute extends Route {
                                                                               .setFromTokenResponse(GPlusUtils.JSON_FACTORY.fromString(tokenData,
                                                                                                                                        GoogleTokenResponse.class));
             // Execute HTTP GET request to revoke current token.
-            final HttpResponse revokeResponse = GPlusUtils.TRANSPORT.createRequestFactory()
-                                                                    .buildGetRequest(new GenericUrl(
-                                                                                                    String.format("https://accounts.google.com/o/oauth2/revoke?token=%s",
-                                                                                                                  credential.getAccessToken())))
-                                                                    .execute();
+            GPlusUtils.TRANSPORT.createRequestFactory()
+                                .buildGetRequest(new GenericUrl(
+                                                                String.format("https://accounts.google.com/o/oauth2/revoke?token=%s",
+                                                                              credential.getAccessToken()))).execute();
             // Reset the user's session.
             request.session().removeAttribute("token");
             return GPlusUtils.GSON.toJson("Successfully disconnected.");

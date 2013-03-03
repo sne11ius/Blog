@@ -9,6 +9,15 @@ public class Post extends AbstractDBObject {
     private String body;
     private User author;
 
+    public Post() {
+    }
+
+    public Post(final String title, final String body, final User author) {
+        this.title = title;
+        this.body = body;
+        this.author = author;
+    }
+
     public String getTitle() {
         return title;
     }

@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html>
     <head>
         <title>wasis.nu/mit/blog</title>
@@ -5,6 +6,9 @@
     <body>
         <#include "gplusheader.ftl"> 
         <h1>wasis.nu/mit/blog?</h1>
+        <#if isowner>
+            <#include "submitpostform.ftl">
+        </#if>
         <#list posts as post>
             <div>
                 <h2>${post.title?html}</h2>

@@ -31,4 +31,10 @@ public class PostService {
         ds.delete(post);
     }
 
+    public void deleteAllPosts() {
+        for (final Post post : getPosts()) {
+            deletePost(post);
+        }
+    }
+
 }
