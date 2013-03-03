@@ -17,7 +17,7 @@ import com.google.gson.Gson;
 public class Blog {
 
     static final Logger LOG = Logger.getLogger(Blog.class);
-    static PostService postService = new PostService();
+    static final PostService postService = new PostService();
 
     /**
      * Default HTTP transport to use to make HTTP requests.

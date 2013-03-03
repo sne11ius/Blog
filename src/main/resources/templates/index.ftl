@@ -15,17 +15,21 @@
         </script>
         <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
         <div style="float:right">
-            <div id="gConnect">
-                <button class="g-signin"
-                    data-scope="https://www.googleapis.com/auth/plus.login"
-                    data-requestvisibleactions="http://schemas.google.com/AddActivity"
-                    data-clientId="${client_id}" data-accesstype="offline"
-                    data-callback="onSignInCallback" data-theme="dark"
-                    data-cookiepolicy="single_host_origin"></button>
-            </div>
+            <#if loggedin>
+                <div>Logged in as ${nickname} <a href="javascript:helper.disconnectServer();" id="disconnect">[logout]</a></div>
+            <#else>
+                <div id="gConnect">
+                    <button class="g-signin"
+                        data-scope="https://www.googleapis.com/auth/plus.login"
+                        data-requestvisibleactions="http://schemas.google.com/AddActivity"
+                        data-clientId="${client_id}" data-accesstype="offline"
+                        data-callback="onSignInCallback" data-theme="dark"
+                        data-cookiepolicy="single_host_origin"></button>
+                </div>
+            </#if>
         </div>
         <h1>wasis.nu/mit/blog?</h1>
-            <div id="authOps" style="display: none">
+        <div id="authOps" style="display: none">
             <h2>User is now signed in to the app using Google+</h2>
             <p>If the user chooses to disconnect, the app must delete all stored information retrieved from Google for the given user.</p>
             <button id="disconnect">Disconnect your Google account from this app</button>
