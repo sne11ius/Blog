@@ -2,6 +2,7 @@ package nu.wasis.blog;
 
 import java.io.IOException;
 
+import nu.wasis.util.GPlusUtils;
 import nu.wasis.util.PrivateConstants;
 import spark.Request;
 import spark.Response;
@@ -15,7 +16,7 @@ import com.google.api.services.oauth2.Oauth2;
 import com.google.api.services.oauth2.model.Tokeninfo;
 
 final class ConnectRoute extends Route {
-    ConnectRoute(String path) {
+    ConnectRoute(final String path) {
         super(path);
     }
 
@@ -26,13 +27,13 @@ final class ConnectRoute extends Route {
         final String tokenData = request.session().attribute("token");
         if (tokenData != null) {
             response.status(400);
-            return Blog.GSON.toJson("Current user is already connected.");
+            return GPlusUtils.GSON.toJson("Current user is already connected.");
         }
         // Ensure that this is no request forgery going on, and that the user
         // sending us this connect request is the user that was supposed to.
         if (!request.queryParams("state").equals(request.session().attribute("state"))) {
             response.status(401);
-            return Blog.GSON.toJson("Invalid state parameter.");
+            return GPlusUtils.GSON.toJson("Invalid state parameter.");
         }
         // Normally the state would be a one-time use token, however in our
         // simple case, we want a user to be able to connect and disconnect
@@ -46,48 +47,46 @@ final class ConnectRoute extends Route {
         try {
             // Upgrade the authorization code into an access and refresh token.
             final GoogleTokenResponse tokenResponse = new GoogleAuthorizationCodeTokenRequest(
-                                                                                              Blog.TRANSPORT,
-                                                                                              Blog.JSON_FACTORY,
+                                                                                              GPlusUtils.TRANSPORT,
+                                                                                              GPlusUtils.JSON_FACTORY,
                                                                                               PrivateConstants.CLIENT_ID,
                                                                                               PrivateConstants.CLIENT_SECRET,
-                                                                                              code,
-                                                                                              "postmessage").execute();
+                                                                                              code, "postmessage").execute();
             // Create a credential representation of the token data.
-            final GoogleCredential credential = new GoogleCredential.Builder().setJsonFactory(Blog.JSON_FACTORY)
-                                                                              .setTransport(Blog.TRANSPORT)
+            final GoogleCredential credential = new GoogleCredential.Builder().setJsonFactory(GPlusUtils.JSON_FACTORY)
+                                                                              .setTransport(GPlusUtils.TRANSPORT)
                                                                               .setClientSecrets(PrivateConstants.CLIENT_ID,
                                                                                                 PrivateConstants.CLIENT_SECRET)
                                                                               .build()
                                                                               .setFromTokenResponse(tokenResponse);
 
             // Check that the token is valid.
-            final Oauth2 oauth2 = new Oauth2.Builder(Blog.TRANSPORT, Blog.JSON_FACTORY, credential).build();
-            final Tokeninfo tokenInfo = oauth2.tokeninfo().setAccessToken(credential.getAccessToken())
-                                              .execute();
+            final Oauth2 oauth2 = new Oauth2.Builder(GPlusUtils.TRANSPORT, GPlusUtils.JSON_FACTORY, credential).build();
+            final Tokeninfo tokenInfo = oauth2.tokeninfo().setAccessToken(credential.getAccessToken()).execute();
             // If there was an error in the token info, abort.
             if (tokenInfo.containsKey("error")) {
                 response.status(401);
-                return Blog.GSON.toJson(tokenInfo.get("error").toString());
+                return GPlusUtils.GSON.toJson(tokenInfo.get("error").toString());
             }
             // Make sure the token we got is for the intended user.
             if (!tokenInfo.getUserId().equals(gPlusId)) {
                 response.status(401);
-                return Blog.GSON.toJson("Token's user ID doesn't match given user ID.");
+                return GPlusUtils.GSON.toJson("Token's user ID doesn't match given user ID.");
             }
             // Make sure the token we got is for our app.
             if (!tokenInfo.getIssuedTo().equals(PrivateConstants.CLIENT_ID)) {
                 response.status(401);
-                return Blog.GSON.toJson("Token's client ID does not match app's.");
+                return GPlusUtils.GSON.toJson("Token's client ID does not match app's.");
             }
             // Store the token in the session for later use.
             request.session().attribute("token", tokenResponse.toString());
-            return Blog.GSON.toJson("Successfully connected user.");
+            return GPlusUtils.GSON.toJson("Successfully connected user.");
         } catch (final TokenResponseException e) {
             response.status(500);
-            return Blog.GSON.toJson("Failed to upgrade the authorization code.");
+            return GPlusUtils.GSON.toJson("Failed to upgrade the authorization code.");
         } catch (final IOException e) {
             response.status(500);
-            return Blog.GSON.toJson("Failed to read token data from Google. " + e.getMessage());
+            return GPlusUtils.GSON.toJson("Failed to read token data from Google. " + e.getMessage());
         }
     }
 }
