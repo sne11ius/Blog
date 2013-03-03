@@ -1,5 +1,8 @@
 package nu.wasis.blog.model;
 
+import com.github.jmkgreen.morphia.annotations.Embedded;
+
+@Embedded
 public class User {
 
     private String email;

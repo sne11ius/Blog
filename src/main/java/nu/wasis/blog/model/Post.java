@@ -1,10 +1,13 @@
 package nu.wasis.blog.model;
 
-public class Post {
+import com.github.jmkgreen.morphia.annotations.Entity;
+
+@Entity("Posts")
+public class Post extends AbstractDBObject {
 
     private String title;
     private String body;
-    private User   author;
+    private User author;
 
     public String getTitle() {
         return title;

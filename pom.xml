@@ -12,6 +12,14 @@
 			<id>Spark repository</id>
 			<url>http://www.sparkjava.com/nexus/content/repositories/spark/</url>
 		</repository>
+		<repository>
+			<id>morphia</id>
+			<url>http://morphia.googlecode.com/svn/mavenrepo/</url>
+		</repository>
+		<repository>
+			<id>google-api-services</id>
+			<url>http://google-api-client-libraries.appspot.com/mavenrepo</url>
+		</repository>
 	</repositories>
 	<dependencies>
 		<dependency>
@@ -19,13 +27,11 @@
 			<artifactId>mongo-java-driver</artifactId>
 			<version>2.10.1</version>
 		</dependency>
-
 		<dependency>
 			<groupId>spark</groupId>
 			<artifactId>spark</artifactId>
 			<version>0.9.9.4-SNAPSHOT</version>
 		</dependency>
-
 		<dependency>
 			<groupId>org.freemarker</groupId>
 			<artifactId>freemarker</artifactId>
@@ -59,6 +65,41 @@
 			<groupId>commons-lang</groupId>
 			<artifactId>commons-lang</artifactId>
 			<version>2.6</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.geronimo.specs</groupId>
+			<artifactId>geronimo-jpa_3.0_spec</artifactId>
+			<version>1.1.1</version>
+		</dependency>
+		<dependency>
+			<groupId>com.github.jmkgreen.morphia</groupId>
+			<artifactId>morphia</artifactId>
+			<version>1.2.2</version>
+		</dependency>
+		<dependency>
+			<groupId>com.github.jmkgreen.morphia</groupId>
+			<artifactId>morphia-logging-slf4j</artifactId>
+			<version>1.2.2</version>
+		</dependency>
+		<dependency>
+			<groupId>com.google.code.gson</groupId>
+			<artifactId>gson</artifactId>
+			<version>2.2.2</version>
+		</dependency>
+		<dependency>
+			<groupId>com.google.apis</groupId>
+			<artifactId>google-api-services-oauth2</artifactId>
+			<version>v2-rev29-1.13.2-beta</version>
+		</dependency>
+		<dependency>
+			<groupId>com.google.http-client</groupId>
+			<artifactId>google-http-client-jackson</artifactId>
+			<version>1.13.1-beta</version>
+		</dependency>
+		<dependency>
+			<groupId>com.google.apis</groupId>
+			<artifactId>google-api-services-plus</artifactId>
+			<version>v1-rev54-1.13.2-beta</version>
 		</dependency>
 	</dependencies>
 </project>
