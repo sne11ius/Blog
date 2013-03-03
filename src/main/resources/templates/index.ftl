@@ -27,8 +27,7 @@
         <h1>wasis.nu/mit/blog?</h1>
             <div id="authOps" style="display: none">
             <h2>User is now signed in to the app using Google+</h2>
-            <p>If the user chooses to disconnect, the app must delete all
-                stored information retrieved from Google for the given user.</p>
+            <p>If the user chooses to disconnect, the app must delete all stored information retrieved from Google for the given user.</p>
             <button id="disconnect">Disconnect your Google account from this app</button>
     
             <h2>User's profile information</h2>
@@ -50,7 +49,7 @@
             </div>
         </#list>
         <script type="text/javascript">
-            <#include "./gplushelper.js"> 
+            <#include "gplushelper.js"> 
         </script>
     </body>
 </html>
