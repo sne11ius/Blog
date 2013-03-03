@@ -1,8 +1,5 @@
 package nu.wasis.blog;
 
-import static spark.Spark.get;
-import static spark.Spark.post;
-import nu.wasis.blog.model.Post;
 import nu.wasis.service.PostService;
 
 import org.apache.log4j.Logger;
@@ -38,33 +35,8 @@ public class Blog {
      * @param args
      */
     public static void main(final String[] args) {
-        // final Post post = new Post();
-        // post.setBody("post body ftw!");
-        // post.setTitle("post title ftw!");
-        // final User user = new User();
-        // user.setEmail("cornelius.lilge@gmail.com");
-        // user.setFirstname("cornelius");
-        // post.setAuthor(user);
-        // postService.addPost(post);
-        // LOG.debug("List:");
-        LOG.debug(postService.getPosts());
-        for (final Post post : postService.getPosts()) {
-            postService.deletePost(post);
-        }
-        // LOG.debug("List:");
-        // LOG.debug(postService.getPosts());
-
         Spark.get(new IndexRoute("/"));
-
-        // Upgrade given auth code to token, and store it in the session.
-        // POST body of request should be the authorization code.
-        // Example URI: /connect?state=...&gplus_id=...
-        post(new ConnectRoute("/connect"));
-
-        // Revoke current user's token and reset their session.
-        post(new DisconnectRoute("/disconnect"));
-
-        // Get list of people user has shared with this app.
-        get(new PeopleRoute("/people"));
+        Spark.post(new ConnectRoute("/connect"));
+        Spark.post(new DisconnectRoute("/disconnect"));
     }
 }
