@@ -20,9 +20,9 @@ final class DisconnectRoute extends Route {
     @Override
     public Object handle(final Request request, final Response response) {
         response.type("application/json");
-        // Only disconnect a connected user.
         final String tokenData = request.session().attribute("token");
         if (tokenData == null) {
+            // not connected
             response.status(401);
             return GPlusUtils.GSON.toJson("Current user not connected.");
         }
@@ -44,7 +44,6 @@ final class DisconnectRoute extends Route {
             request.session().removeAttribute("token");
             return GPlusUtils.GSON.toJson("Successfully disconnected.");
         } catch (final IOException e) {
-            // For whatever reason, the given token was invalid.
             response.status(400);
             return GPlusUtils.GSON.toJson("Failed to revoke token for given user.");
         }

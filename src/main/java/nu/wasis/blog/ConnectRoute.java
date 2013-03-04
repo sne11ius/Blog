@@ -23,9 +23,9 @@ final class ConnectRoute extends Route {
     @Override
     public Object handle(final Request request, final Response response) {
         response.type("application/json");
-        // Only connect a user that is not already connected.
         final String tokenData = request.session().attribute("token");
         if (tokenData != null) {
+            // already connected
             response.status(400);
             return GPlusUtils.GSON.toJson("Current user is already connected.");
         }
@@ -35,11 +35,6 @@ final class ConnectRoute extends Route {
             response.status(401);
             return GPlusUtils.GSON.toJson("Invalid state parameter.");
         }
-        // Normally the state would be a one-time use token, however in our
-        // simple case, we want a user to be able to connect and disconnect
-        // without reloading the page. Thus, for demonstration, we don't
-        // implement this best practice.
-        // request.session().removeAttribute("state");
 
         final String gPlusId = request.queryParams("gplus_id");
         final String code = request.body();

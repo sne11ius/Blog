@@ -22,7 +22,6 @@ import freemarker.template.TemplateException;
 
 final class IndexRoute extends Route {
 
-    @SuppressWarnings("unused")
     private static final Logger LOG = Logger.getLogger(IndexRoute.class);
 
     IndexRoute(final String path) {
@@ -31,28 +30,38 @@ final class IndexRoute extends Route {
 
     @Override
     public Object handle(final Request request, final Response response) {
-        final Configuration cfg = new Configuration();
-        cfg.setClassForTemplateLoading(Blog.class, "/templates");
-        cfg.setObjectWrapper(ObjectWrapper.BEANS_WRAPPER);
+        final Configuration cfg = createConfig();
         final String state = new BigInteger(130, new SecureRandom()).toString(32);
         request.session().attribute("state", state);
         final StringWriter writer = new StringWriter();
         try {
             final Template template = cfg.getTemplate("index.ftl");
-            final Map<String, Object> map = new HashMap<String, Object>();
-            map.put("posts", Blog.postService.getPosts());
-            map.put("client_id", PrivateConstants.CLIENT_ID);
-            map.put("state", state);
-            map.put("nickname", GPlusUtils.getCurrentUsername(request));
-            map.put("loggedin", GPlusUtils.isLoggedIn(request));
-            map.put("isowner", GPlusUtils.isOwnerLoggedIn(request));
+            final Map<String, Object> map = createTemplateMap(state, request);
             template.process(map, writer);
         } catch (final IOException e) {
-            Blog.LOG.error(e);
+            LOG.error(e);
         } catch (final TemplateException e) {
-            Blog.LOG.error(e);
+            LOG.error(e);
         }
         return writer;
+    }
+
+    private Map<String, Object> createTemplateMap(final String state, final Request request) {
+        final Map<String, Object> map = new HashMap<String, Object>();
+        map.put("posts", Blog.postService.getPosts());
+        map.put("client_id", PrivateConstants.CLIENT_ID);
+        map.put("state", state);
+        map.put("nickname", GPlusUtils.getCurrentUsername(request));
+        map.put("loggedin", GPlusUtils.isLoggedIn(request));
+        map.put("isowner", GPlusUtils.isOwnerLoggedIn(request));
+        return map;
+    }
+
+    private Configuration createConfig() {
+        final Configuration config = new Configuration();
+        config.setClassForTemplateLoading(Blog.class, "/templates");
+        config.setObjectWrapper(ObjectWrapper.BEANS_WRAPPER);
+        return config;
     }
 
 }
