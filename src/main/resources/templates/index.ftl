@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
     <head>
+        <meta charset="utf-8">
         <title>wasis.nu/mit/blog</title>
     </head>
     <body>
@@ -15,6 +16,10 @@
         </#list>
         <script type="text/javascript">
             <#include "gplushelper.js"> 
+            <#include "scripts.js">
         </script>
+        <style>
+            <#include "styles.css">
+        </style>
     </body>
 </html>
