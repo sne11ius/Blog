@@ -1,6 +1,17 @@
 @CHARSET "UTF-8";
+* {
+	-webkit-margin-before: 0;
+    -webkit-margin-after: 0;
+}
 
-label {
-	width: 7em;
-	display: inline-block;
+table {
+	 width: 100%;
+}
+
+td {
+	vertical-align: top;
+}
+
+td.label {
+	width: 70px;
 }
