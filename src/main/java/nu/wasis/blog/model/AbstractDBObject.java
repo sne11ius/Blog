@@ -19,7 +19,8 @@ public class AbstractDBObject {
         return id;
     }
 
-    public void setId(ObjectId id) {
+    public void setId(final ObjectId id) {
         this.id = id;
     }
+
 }

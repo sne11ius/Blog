@@ -1,6 +1,8 @@
 package nu.wasis.blog.model;
 
 import java.util.Date;
+import java.util.LinkedList;
+import java.util.List;
 
 import com.github.jmkgreen.morphia.annotations.Entity;
 
@@ -11,6 +13,8 @@ public class Post extends AbstractDBObject {
     private String body;
     private User author;
     private Date date = new Date();
+
+    private List<Comment> comments = new LinkedList<>();
 
     public Post() {
     }
@@ -51,6 +55,14 @@ public class Post extends AbstractDBObject {
 
     public void setDate(final Date date) {
         this.date = date;
+    }
+
+    public List<Comment> getComments() {
+        return comments;
+    }
+
+    public void setComments(final List<Comment> comments) {
+        this.comments = comments;
     }
 
 }

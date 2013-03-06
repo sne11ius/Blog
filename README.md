@@ -10,7 +10,12 @@ Stack
  - freemarker
  - com.google.apis
 
-build
+run
 =====
- - mvn compile assembly:single
- - java -jar target/Blog-0.0.1-SNAPSHOT-jar-with-dependencies.jar
+1. Try
+
+        mvn compile assembly:single && java -jar target/Blog-0.0.1-SNAPSHOT-jar-with-dependencies.jar
+2. See it fail
+3. Add proper `nu.wasis.blog.util.PrivateConstants.java`
+4. ...
+5. Profit

@@ -1,4 +1,4 @@
-package nu.wasis.blog;
+package nu.wasis.blog.routes;
 
 import java.io.IOException;
 import java.io.StringWriter;
@@ -7,6 +7,8 @@ import java.security.SecureRandom;
 import java.util.HashMap;
 import java.util.Map;
 
+import nu.wasis.blog.Blog;
+import nu.wasis.service.PostService;
 import nu.wasis.util.GPlusUtils;
 import nu.wasis.util.PrivateConstants;
 
@@ -20,11 +22,11 @@ import freemarker.template.ObjectWrapper;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
 
-final class IndexRoute extends Route {
+public final class IndexRoute extends Route {
 
     private static final Logger LOG = Logger.getLogger(IndexRoute.class);
 
-    IndexRoute(final String path) {
+    public IndexRoute(final String path) {
         super(path);
     }
 
@@ -48,7 +50,7 @@ final class IndexRoute extends Route {
 
     private Map<String, Object> createTemplateMap(final String state, final Request request) {
         final Map<String, Object> map = new HashMap<String, Object>();
-        map.put("posts", Blog.postService.getPosts());
+        map.put("posts", PostService.INSTANCE.getPosts());
         map.put("client_id", PrivateConstants.CLIENT_ID);
         map.put("state", state);
         map.put("nickname", GPlusUtils.getCurrentUsername(request));

@@ -5,6 +5,7 @@ import java.io.IOException;
 import nu.wasis.blog.model.User;
 
 import org.apache.log4j.Logger;
+import org.bson.types.ObjectId;
 
 import spark.Request;
 
@@ -16,6 +17,7 @@ import com.google.api.client.json.jackson.JacksonFactory;
 import com.google.api.services.plus.Plus;
 import com.google.api.services.plus.model.Person;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 public class GPlusUtils {
 
@@ -34,7 +36,12 @@ public class GPlusUtils {
     /**
      * Gson object to serialize JSON responses to requests to this servlet.
      */
-    public static final Gson GSON = new Gson();
+    public static final Gson GSON;
+    static {
+        final GsonBuilder gb = new GsonBuilder();
+        gb.registerTypeAdapter(ObjectId.class, new ObjectIdGsonAdapter()); // nice object ids
+        GSON = gb.create();
+    }
 
     public static boolean isLoggedIn(final Request request) {
         return null != request.session().attribute("token");
@@ -51,16 +58,7 @@ public class GPlusUtils {
             return "";
         }
         try {
-            final GoogleCredential credential = new GoogleCredential.Builder().setJsonFactory(JSON_FACTORY)
-                                                                              .setTransport(TRANSPORT)
-                                                                              .setClientSecrets(PrivateConstants.CLIENT_ID,
-                                                                                                PrivateConstants.CLIENT_SECRET)
-                                                                              .build()
-                                                                              .setFromTokenResponse(JSON_FACTORY.fromString(tokenData,
-                                                                                                                            GoogleTokenResponse.class));
-            final Plus service = new Plus.Builder(TRANSPORT, JSON_FACTORY, credential).setApplicationName(PrivateConstants.APPLICATION_NAME)
-                                                                                      .build();
-            final Person me = service.people().get("me").execute();
+            final Person me = getCurrentGPlusUser(tokenData);
             return me.getId();
         } catch (final IOException e) {
             LOG.error(e);
@@ -75,16 +73,7 @@ public class GPlusUtils {
             return "[unknown]";
         }
         try {
-            final GoogleCredential credential = new GoogleCredential.Builder().setJsonFactory(JSON_FACTORY)
-                                                                              .setTransport(TRANSPORT)
-                                                                              .setClientSecrets(PrivateConstants.CLIENT_ID,
-                                                                                                PrivateConstants.CLIENT_SECRET)
-                                                                              .build()
-                                                                              .setFromTokenResponse(JSON_FACTORY.fromString(tokenData,
-                                                                                                                            GoogleTokenResponse.class));
-            final Plus service = new Plus.Builder(TRANSPORT, JSON_FACTORY, credential).setApplicationName(PrivateConstants.APPLICATION_NAME)
-                                                                                      .build();
-            final Person me = service.people().get("me").execute();
+            final Person me = getCurrentGPlusUser(tokenData);
             return me.getDisplayName();
         } catch (final IOException e) {
             LOG.error(e);
@@ -99,16 +88,7 @@ public class GPlusUtils {
             return null;
         }
         try {
-            final GoogleCredential credential = new GoogleCredential.Builder().setJsonFactory(JSON_FACTORY)
-                                                                              .setTransport(TRANSPORT)
-                                                                              .setClientSecrets(PrivateConstants.CLIENT_ID,
-                                                                                                PrivateConstants.CLIENT_SECRET)
-                                                                              .build()
-                                                                              .setFromTokenResponse(JSON_FACTORY.fromString(tokenData,
-                                                                                                                            GoogleTokenResponse.class));
-            final Plus service = new Plus.Builder(TRANSPORT, JSON_FACTORY, credential).setApplicationName(PrivateConstants.APPLICATION_NAME)
-                                                                                      .build();
-            final Person me = service.people().get("me").execute();
+            final Person me = getCurrentGPlusUser(tokenData);
             final String firstname = me.getDisplayName().split(" ")[0];
             final String lastname = me.getDisplayName().split(" ")[1];
             final String email = "";// me.getEmails().get(0).toString();
@@ -118,4 +98,19 @@ public class GPlusUtils {
             return null;
         }
     }
+
+    private static Person getCurrentGPlusUser(final String tokenData) throws IOException {
+        final GoogleCredential credential = new GoogleCredential.Builder().setJsonFactory(JSON_FACTORY)
+                                                                          .setTransport(TRANSPORT)
+                                                                          .setClientSecrets(PrivateConstants.CLIENT_ID,
+                                                                                            PrivateConstants.CLIENT_SECRET)
+                                                                          .build()
+                                                                          .setFromTokenResponse(JSON_FACTORY.fromString(tokenData,
+                                                                                                                        GoogleTokenResponse.class));
+        final Plus service = new Plus.Builder(TRANSPORT, JSON_FACTORY, credential).setApplicationName(PrivateConstants.APPLICATION_NAME)
+                                                                                  .build();
+        final Person me = service.people().get("me").execute();
+        return me;
+    }
+
 }

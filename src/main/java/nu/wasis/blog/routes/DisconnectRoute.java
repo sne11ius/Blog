@@ -1,4 +1,4 @@
-package nu.wasis.blog;
+package nu.wasis.blog.routes;
 
 import java.io.IOException;
 
@@ -12,8 +12,8 @@ import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
 import com.google.api.client.googleapis.auth.oauth2.GoogleTokenResponse;
 import com.google.api.client.http.GenericUrl;
 
-final class DisconnectRoute extends Route {
-    DisconnectRoute(final String path) {
+public final class DisconnectRoute extends Route {
+    public DisconnectRoute(final String path) {
         super(path);
     }
 

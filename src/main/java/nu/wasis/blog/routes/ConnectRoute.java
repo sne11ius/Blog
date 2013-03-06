@@ -1,4 +1,4 @@
-package nu.wasis.blog;
+package nu.wasis.blog.routes;
 
 import java.io.IOException;
 
@@ -15,8 +15,8 @@ import com.google.api.client.googleapis.auth.oauth2.GoogleTokenResponse;
 import com.google.api.services.oauth2.Oauth2;
 import com.google.api.services.oauth2.model.Tokeninfo;
 
-final class ConnectRoute extends Route {
-    ConnectRoute(final String path) {
+public final class ConnectRoute extends Route {
+    public ConnectRoute(final String path) {
         super(path);
     }
 
