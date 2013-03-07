@@ -21,5 +21,8 @@
         <style>
             <#include "styles.css">
         </style>
+        <div style="float:right">
+        100% iso-8601 compliant
+        </div>
     </body>
 </html>

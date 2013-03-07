@@ -52,9 +52,9 @@ public class PostService {
         }
     }
 
-    public void addComment(final String postId, final Comment commment) {
+    public void addComment(final String postId, final Comment comment) {
         final Post post = getPost(postId);
-        post.getComments().add(commment);
+        post.getComments().add(comment);
         save(post);
     }
 
