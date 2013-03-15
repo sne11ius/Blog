@@ -1,3 +1,8 @@
+Deprecated warning ;)
+=====================
+
+This thing is deprecated & ugly. Please go to https://github.com/sne11ius/jlog to find a new and improved version.
+
 Blog
 ====
 
